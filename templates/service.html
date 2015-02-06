@@ -1,0 +1,43 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Service</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-condensed">
+      <tr><td>Service:</td><td>{{service.service}}</td></tr>
+      <tr><td>Environ:</td><td>{{service.environ}}</td></tr>
+      <tr><td>Cluster:</td><td>{{service.cluster}}</td></tr>
+      <tr><td>Region:</td><td>{{service.region}}</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Groups</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-condensed">
+      {% for group in service.groups %}
+      <tr>
+        <td>{{group.name}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Balancers</h3>
+  </div>
+  <div class="panel-body">
+    <table class="table table-condensed">
+      {% for name, elb in service['load_balancers'].iteritems() %}
+      <tr>
+        <td>{{name}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
