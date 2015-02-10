@@ -35,31 +35,37 @@ def api_v1_environs_json():
     return json.dumps(output)
 
 @app.route('/v1/service/<service>')
-def api_v1_service():
+def api_v1_service(service):
     bc = billow.billowCloud(regions=['us-east-1'])
     services = bc.get_service(service)
     output = list()
     for s in services:
         for g in s.groups:
             for i in g.instances:
-                instinfo = g.asg.get_instance(i)
-                if len(str(i.public_dns_name)) > 0:
-                    output.add(str(i.public_dns_name))
-                else:
-                    output.add(str(i.private_dns_name))
-    return make_response('\n'.join(output))
+                insts = g.asg.get_instance(i['id'])
+                for inst in insts:
+                    if len(str(inst.public_dns_name)) > 0:
+                        output.append(str(inst.public_dns_name))
+                    else:
+                        output.append(str(inst.private_dns_name))
+    resp = app.make_response('\n'.join(output))
+    resp.mimetype = "text/plain"
+    return resp
 
 @app.route('/v1/service/<service>/<environ>')
-def api_v1_service_environ():
+def api_v1_service_environ(service, environ):
     bc = billow.billowCloud(regions=['us-east-1'])
     services = bc.get_service("%s-%s" % (service, environ))
     output = list()
     for s in services:
         for g in s.groups:
             for i in g.instances:
-                instinfo = g.asg.get_instance(i)
-                if len(str(i.public_dns_name)) > 0:
-                    output.add(str(i.public_dns_name))
-                else:
-                    output.add(str(i.private_dns_name))
-    return make_response('\n'.join(output))
+                insts = g.asg.get_instance(i['id'])
+                for inst in insts:
+                    if len(str(inst.public_dns_name)) > 0:
+                        output.append(str(inst.public_dns_name))
+                    else:
+                        output.append(str(inst.private_dns_name))
+    resp = app.make_response('\n'.join(output))
+    resp.mimetype = "text/plain"
+    return resp
