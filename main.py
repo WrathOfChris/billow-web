@@ -1,6 +1,7 @@
 from billow import billow
 from flask import Flask, redirect, render_template
 from pprint import pprint, pformat
+import os
 import yaml
 
 app = Flask(__name__)
@@ -8,13 +9,23 @@ app = Flask(__name__)
 app.config.update(dict(
     DEBUG=True,
     ))
-#app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+#app.config.from_object('yourapplication.default_settings')
+
+if 'BILLOW_SETTINGS' in os.environ:
+    app.config.from_envvar('BILLOW_SETTINGS')
+
+config = {
+        'urls': [
+            { 'name': 'us-east-1', 'url': '/#' },
+            ]
+        }
 
 def header(name=None):
     nav = {
             'name': 'billow-web',
             'logourl': '/static/AWS_Simple_Icons_AWS_Cloud.svg',
-            'title': 'billow-web'
+            'title': 'billow-web',
+            'urls': config['urls']
             }
     if name:
         nav['title'] = name
@@ -144,7 +155,7 @@ def stats_info(instance):
         return '', 404
     i = instances[0]
 
-    statsurl = 'https://graphite-grafana-stage.ec2-us-east-1.us1.svc.ubnt.com/grafana/#/dashboard/db/instance'
+    statsurl = 'https://yourhost.com/grafana/#/dashboard/db/instance'
     return redirect("%s?var-instance=%s" % (statsurl, i.private_dns_name.split('.')[0]), 302)
 
 @app.route("/")
