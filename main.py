@@ -1,2 +1,2 @@
- from billow_web import app
+from billow_web import app
 app.run()
