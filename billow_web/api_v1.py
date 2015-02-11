@@ -1,10 +1,10 @@
 from billow import billow
 import json
-from main import app
+from main import app, config
 
 @app.route('/v1/regions.json')
 def api_v1_regions_json():
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
     output = list()
     for s in services:
@@ -14,7 +14,7 @@ def api_v1_regions_json():
 
 @app.route('/v1/services.json')
 def api_v1_services_json():
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
     output = list()
     for s in services:
@@ -24,7 +24,7 @@ def api_v1_services_json():
 
 @app.route('/v1/environs.json')
 def api_v1_environs_json():
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
     output = list()
     for s in services:
@@ -34,7 +34,7 @@ def api_v1_environs_json():
 
 @app.route('/v1/service/<service>')
 def api_v1_service(service):
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service(service)
     output = list()
     for s in services:
@@ -52,7 +52,7 @@ def api_v1_service(service):
 
 @app.route('/v1/service/<service>/<environ>')
 def api_v1_service_environ(service, environ):
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     output = list()
     for s in services:

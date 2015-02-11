@@ -1,10 +1,10 @@
 from billow import billow
 import json
 import yaml
-from main import app
+from main import app, config
 
 def api_v2_services():
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
     output = list()
     for s in services:

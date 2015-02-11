@@ -13,5 +13,8 @@ if 'BILLOW_SETTINGS' in os.environ:
 config = {
         'urls': [
             { 'name': 'us-east-1', 'url': '/#' },
-            ]
+            ],
+        'regions': [
+                'us-east-1'
+                ]
         }

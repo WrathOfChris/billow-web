@@ -11,15 +11,10 @@
     <thead>
       <tr>
         <td>ID</td>
-        <td>HostState</td>
-        <td>InstState</td>
         <td>Health</td>
-        <td>IP Address</td>
-        <td>Hostname</td>
+        <td>State</td>
         <td>Zone</td>
-        <td>Type</td>
         <td>Config</td>
-        <td>Uptime</td>
         <td>Commands</td>
       </tr>
     </thead>
@@ -27,15 +22,10 @@
       {% for instance in instances %}
       <tr>
         <td>{{instance.id}}</td>
-        <td>{{instance.state}}</td>
-        <td>{{instance.instance_state}}</td>
         <td>{{instance.health}}</td>
-        <td>{{instance.ip_address}}</td>
-        <td>{{instance.dns_name}}</td>
+        <td>{{instance.state}}</td>
         <td>{{instance.zone}}</td>
-        <td>{{instance.instance_type}}</td>
         <td>{{instance.config}}</td>
-        <td>{{instance.uptime}}</td>
         <td>
           <div class="btn-group" role="group" aria-label="commands">
             <button type="button" class="btn btn-default btn-xs"><a href="{{instance.url.stats}}">Stats</a></button>

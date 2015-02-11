@@ -1,6 +1,7 @@
 from billow import billow
 from flask import Flask, redirect, render_template
 from pprint import pprint, pformat
+import datetime
 import yaml
 from billow_web import app, config
 
@@ -26,7 +27,7 @@ def footer():
 def services():
     output = header(name='Services')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
     svcs = list()
     for s in services:
@@ -36,7 +37,7 @@ def services():
                 'region': s.region,
                 'url': {
                     'service': '/service/%s/%s' % (s.service, s.environ),
-                    'instances': '/instances/%s/%s' % (s.service, s.environ),
+                    'instances': '/instancestatus/%s/%s' % (s.service, s.environ),
                     'config': '/config/%s/%s' % (s.service, s.environ),
                     'stats': '/stats/%s/%s' % (s.service, s.environ),
                     'alerts': '/alerts/%s/%s' % (s.service, s.environ)
@@ -53,7 +54,7 @@ def services():
 def service_noenv_info(service):
     output = header(name='Service')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service(service)
     for s in services:
         config = s.config()
@@ -67,7 +68,7 @@ def service_noenv_info(service):
 def service_info(service, environ):
     output = header(name='Config')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
         output += render_template('service.html', service=s.config()[service])
@@ -79,7 +80,7 @@ def service_info(service, environ):
 def service_config(service, environ):
     output = header(name='Config')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
         config = s.config()
@@ -89,21 +90,55 @@ def service_config(service, environ):
     output += footer()
     return output
 
-@app.route('/instances/<service>/<environ>')
-def instances(service, environ):
-    output = header(name='Instances')
+@app.route('/instancestatus/<service>/<environ>')
+def instancestatus(service, environ):
+    output = header(name='InstanceStatus')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     instances = list()
     for s in services:
         for g in s.groups:
-            for i in g.instances:
+            for i in g.instancestatus:
                 i['url'] = {
                         'instance': '/instance/%s' % i['id'],
                         'stats': '/stats/%s' % i['id']
                         }
                 instances.append(i)
+    output += render_template('instancestatus.html', instances=instances)
+
+    output += footer()
+    return output
+
+@app.route('/instances/<service>/<environ>')
+def instances(service, environ):
+    output = header(name='Instances')
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service("%s-%s" % (service, environ))
+    instances = list()
+    for s in services:
+        for g in s.groups:
+            for i in g.instances:
+                if i['public_ip_address']:
+                    i['ip_address'] = i['public_ip_address']
+                else:
+                    i['ip_address'] = i['private_ip_address']
+                if i['public_dns_name']:
+                    i['dns_name'] = i['public_dns_name']
+                else:
+                    i['dns_name'] = i['private_dns_name']
+                launch = datetime.datetime.strptime(i['launch_time'],
+                        "%Y-%m-%dT%H:%M:%S.%fZ")
+                uptime = datetime.datetime.utcnow() - launch
+                i['uptime'] = str(uptime - datetime.timedelta(
+                    microseconds=uptime.microseconds))
+                i['url'] = {
+                        'instance': '/instance/%s' % i['id'],
+                        'stats': '/stats/%s' % i['id']
+                        }
+                instances.append(i)
+
     output += render_template('instancelist.html', instances=instances)
 
     output += footer()
@@ -114,7 +149,7 @@ def instances(service, environ):
 def instance_info(instance):
     output = header(name='Instance')
 
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     instances = list()
     for r in bc.regions:
         if r.region == 'us-east-1':
@@ -130,7 +165,7 @@ def instance_info(instance):
 # XXX TODO
 @app.route('/stats/<instance>')
 def stats_info(instance):
-    bc = billow.billowCloud(regions=['us-east-1'])
+    bc = billow.billowCloud(regions=config.config['regions'])
     instances = list()
     for r in bc.regions:
         if r.region == 'us-east-1':
