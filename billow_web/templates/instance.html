@@ -1,0 +1,38 @@
+<ol class="breadcrumb">
+  <li><a href="/services">service</a></li>
+  <li><a href="/service/{{service}}">{{service}}</a></li>
+  <li><a href="/service/{{service}}/{{environ}}">{{environ}}</a></li>
+  <li class="active"><a href="/instance/{{service}}/{{environ}}/{{instance.id}}">instance</a></li>
+</ol>
+<div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">
+    {{instance.id}}
+  </div>
+  <div class="panel-body"></div>
+
+  <!-- List group -->
+  <dl class="list-group dl-horizontal">
+    <dt>ID<dt><dd>{{instance.id}}</dd>
+    <dt>Host State<dt><dd>{{instance.state}}</dd>
+    <dt>Instance State<dt><dd>{{instance.instance_state}}</dd>
+    <dt>Group State<dt><dd>{{instance.health}}</dd>
+    <dt>Type<dt><dd>{{instance.instance_type}}</dd>
+    <dt>Zone<dt><dd>{{instance.zone}}</dd>
+    <dt>Public IP Address<dt><dd>{{instance.public_ip_address}}</dd>
+    <dt>Private IP Address<dt><dd>{{instance.private_ip_address}}</dd>
+    <dt>Public DNS Hostname<dt><dd>{{instance.public_dns_name}}</dd>
+    <dt>Private DNS Hostname<dt><dd>{{instance.private_dns_name}}</dd>
+    <dt>Key Name<dt><dd>{{instance.key_name}}</dd>
+    <dt>Image ID<dt><dd>{{instance.image_id}}</dd>
+    <dt>Role<dt><dd>{{instance.instance_profile}}</dd>
+    <dt>VPC<dt><dd>{{instance.vpc_id}}</dd>
+    <dt>Subnet<dt><dd>{{instance.subnet_id}}</dd>
+    <dt>Launch Config<dt><dd>{{instance.config}}</dd>
+    <dt>Launch Time<dt><dd>{{instance.launch_time}}</dd>
+    <dt>Architecture<dt><dd>{{instance.architecture}}</dd>
+    <dt>EBS Optimized<dt><dd>{{instance.ebs_optimized}}</dd>
+    <dt>Virtualization Type<dt><dd>{{instance.virtualization_type}}</dd>
+  </dl>
+  <!--<li class="list-group-item"></li>-->
+</div>

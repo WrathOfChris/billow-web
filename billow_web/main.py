@@ -57,16 +57,14 @@ def service_noenv_info(service):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service(service)
     for s in services:
-        config = s.config()
-        output += render_template('config.html', raw=yaml.safe_dump(config,
-            encoding='utf-8', allow_unicode=True))
+        output += render_template('service.html', service=s.config()[service])
 
     output += footer()
     return output
 
 @app.route('/service/<service>/<environ>')
 def service_info(service, environ):
-    output = header(name='Config')
+    output = header(name='Service')
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -83,9 +81,10 @@ def service_config(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
-        config = s.config()
-        output += render_template('config.html', raw=yaml.safe_dump(config,
-            encoding='utf-8', allow_unicode=True))
+        sconfig = s.config()
+        output += render_template('config.html', service=service,
+                environ=environ, raw=yaml.safe_dump(sconfig,
+                    encoding='utf-8', allow_unicode=True))
 
     output += footer()
     return output
@@ -101,11 +100,13 @@ def instancestatus(service, environ):
         for g in s.groups:
             for i in g.instancestatus:
                 i['url'] = {
-                        'instance': '/instance/%s' % i['id'],
+                        'instance': '/instance/%s/%s/%s' % (service, environ,
+                            i['id']),
                         'stats': '/stats/%s' % i['id']
                         }
                 instances.append(i)
-    output += render_template('instancestatus.html', instances=instances)
+    output += render_template('instancestatus.html', service=service,
+            environ=environ, instances=instances)
 
     output += footer()
     return output
@@ -134,12 +135,32 @@ def instances(service, environ):
                 i['uptime'] = str(uptime - datetime.timedelta(
                     microseconds=uptime.microseconds))
                 i['url'] = {
-                        'instance': '/instance/%s' % i['id'],
+                        'instance': '/instance/%s/%s/%s' % (service, environ,
+                            i['id']),
                         'stats': '/stats/%s' % i['id']
                         }
                 instances.append(i)
 
-    output += render_template('instancelist.html', instances=instances)
+    output += render_template('instancelist.html', service=service,
+            environ=environ, instances=instances)
+
+    output += footer()
+    return output
+
+@app.route('/instance/<service>/<environ>/<instance>')
+def instance_service_info(service, environ, instance):
+    output = header(name='Instance')
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service("%s-%s" % (service, environ))
+
+    inst = None
+    for s in services:
+        inst = s.get_instance(instance)
+        if inst:
+            output += render_template('instance.html', instance=inst,
+                    service=service, environ=environ)
+            break
 
     output += footer()
     return output
@@ -157,7 +178,7 @@ def instance_info(instance):
     raw = ''
     for i in instances:
         raw += pformat(vars(i))
-    output += render_template('config.html', raw=raw)
+    output += render_template('instance.html', raw=raw)
 
     output += footer()
     return output
