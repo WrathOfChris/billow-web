@@ -40,7 +40,8 @@ def services():
                     'instances': '/instancestatus/%s/%s' % (s.service, s.environ),
                     'config': '/config/%s/%s' % (s.service, s.environ),
                     'stats': '/stats/%s/%s' % (s.service, s.environ),
-                    'alerts': '/alerts/%s/%s' % (s.service, s.environ)
+                    'alerts': '/alerts/%s/%s' % (s.service, s.environ),
+                    'visual': '/visual/%s/%s' % (s.service, s.environ)
                     }
                 }
         svcs.append(svc)
@@ -161,6 +162,18 @@ def instance_service_info(service, environ, instance):
             output += render_template('instance.html', instance=inst,
                     service=service, environ=environ)
             break
+
+    output += footer()
+    return output
+
+@app.route('/visual/<service>/<environ>')
+def visual(service, environ):
+    output = header(name='Visual')
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service("%s-%s" % (service, environ))
+    for s in services:
+        output += render_template('visual.html', service=s.info()[service])
 
     output += footer()
     return output

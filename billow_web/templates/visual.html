@@ -1,0 +1,90 @@
+<ol class="breadcrumb">
+  <li><a href="/services">service</a></li>
+  <li><a href="/service/{{service.service}}">{{service.service}}</a></li>
+  <li><a href="/service/{{service.service}}/{{service.environ}}">{{service.environ}}</a></li>
+  <li class="active"><a href="/visual/{{service.service}}/{{service.environ}}">visual</a></li>
+</ol>
+
+<div class="container">
+
+<div class="media">
+  <div class="media-left">
+      <a href="/dns/{{service.service}}">
+            <img class="media-object" src="/static/Compute & Networking_Amazon Route 53.svg" alt="DNS" height="64" width="64">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Service Endpoint</h4>
+        ...TBD...
+    </div>
+</div>
+
+<div class="media">
+  <div class="media-left">
+      <a href="/dns/{{service.service}}">
+            <img class="media-object" src="/static/Compute & Networking_Amazon Route 53.svg" alt="DNS" height="64" width="64">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Load Balancer DNS</h4>
+        <div class="list-group">
+            {% for ename in service.load_balancers %}
+            <p class="list-group-item">{{service.load_balancers[ename].dns_name}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="media">
+  <div class="media-left">
+      <a href="/elb/{{service.service}}">
+            <img class="media-object" src="/static/Compute & Networking_Elastic Load Balancing.svg" alt="Balancer" height="64" width="64">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Load Balancer</h4>
+        <div class="list-group">
+            {% for name, elb in service['load_balancers'].iteritems() %}
+            <p class="list-group-item">{{name}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="media">
+  <div class="media-left">
+      <a href="/elb/{{service.service}}">
+            <img class="media-object" src="/static/Compute & Networking_Auto Scaling.svg" alt="Autoscale Group" height="64" width="64">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Autoscale Group</h4>
+        <div class="list-group">
+            {% for group in service.groups %}
+            <p class="list-group-item">{{group.name}}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="media">
+  <div class="media-left">
+      <a href="/elb/{{service.service}}">
+            <img class="media-object" src="/static/Compute & Networking_Amazon EC2 Instances.svg" alt="Autoscale Group" height="64" width="64">
+        </a>
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">Instances</h4>
+        <div class="list-group">
+          {% for group in service.groups %}
+          <p class="list-group-item active">{{group.name}}
+          {% for inst in group.instances %}
+          <p class="list-group-item">{{inst.id}}</p>
+          {% endfor %}
+          </p>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+
+</div>
