@@ -1,13 +1,8 @@
-<!-- services.{service,region,url} -->
 <script type="text/javascript" class="init">
     $(document).ready(function() {
         $('#servicelist').dataTable();
     } );
 </script>
-
-<ol class="breadcrumb">
-  <li class="active"><a href="/services">services</a></li>
-</ol>
 
 <!--<div class="list-group">
   <a href="#" class="list-group-item active">Services</a>
@@ -24,16 +19,13 @@
     <tbody>
       {% for service in services %}
       <tr>
-        <td><a href="{{service.url.service}}">{{service.service}}</a></td>
+        <td><a href="/service/{{service.service}}/{{service.environ}}">{{service.service}}</a></td>
         <td>{{service.environ}}</td>
         <td>{{service.region}}</td>
         <td>
           <div class="btn-group" role="group" aria-label="commands">
-            <button type="button" class="btn btn-default btn-xs"><a href="{{service.url.instances}}">Instances</a></button>
-            <button type="button" class="btn btn-default btn-xs"><a href="{{service.url.config}}">Config</a></button>
-            <button type="button" class="btn btn-default btn-xs"><a href="{{service.url.stats}}">Stats</a></button>
-            <button type="button" class="btn btn-default btn-xs"><a href="{{service.url.alerts}}">Alerts</a></button>
-            <button type="button" class="btn btn-default btn-xs"><a href="{{service.url.visual}}">Visual</a></button>
+            <button type="button" class="btn btn-default btn-xs"><a href="/service/{{service.service}}/{{service.environ}}">Service</a></button>
+            <button type="button" class="btn btn-default btn-xs"><a href="/instances/{{service.service}}/{{service.environ}}">Instances</a></button>
           </div>
         </td>
       </tr>

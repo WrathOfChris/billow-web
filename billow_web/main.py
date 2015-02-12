@@ -34,15 +34,7 @@ def services():
         svc = {
                 'service': s.service,
                 'environ': s.environ,
-                'region': s.region,
-                'url': {
-                    'service': '/service/%s/%s' % (s.service, s.environ),
-                    'instances': '/instancestatus/%s/%s' % (s.service, s.environ),
-                    'config': '/config/%s/%s' % (s.service, s.environ),
-                    'stats': '/stats/%s/%s' % (s.service, s.environ),
-                    'alerts': '/alerts/%s/%s' % (s.service, s.environ),
-                    'visual': '/visual/%s/%s' % (s.service, s.environ)
-                    }
+                'region': s.region
                 }
         svcs.append(svc)
     svcs.sort(key=lambda x: x['service'])
@@ -51,6 +43,14 @@ def services():
     output += footer()
     return output
 
+def servicenav(service, active):
+    nav = {
+            'service': service.service,
+            'environ': service.environ,
+            'active': active
+            }
+    return render_template('servicenav.html', nav=nav)
+
 @app.route('/service/<service>')
 def service_noenv_info(service):
     output = header(name='Service')
@@ -58,6 +58,7 @@ def service_noenv_info(service):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service(service)
     for s in services:
+        output += servicenav(s, 'service')
         output += render_template('service.html', service=s.config()[service])
 
     output += footer()
@@ -70,6 +71,7 @@ def service_info(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
+        output += servicenav(s, 'service')
         output += render_template('service.html', service=s.config()[service])
 
     output += footer()
@@ -82,6 +84,7 @@ def service_config(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
+        output += servicenav(s, 'config')
         sconfig = s.config()
         output += render_template('config.html', service=service,
                 environ=environ, raw=yaml.safe_dump(sconfig,
@@ -90,9 +93,9 @@ def service_config(service, environ):
     output += footer()
     return output
 
-@app.route('/instancestatus/<service>/<environ>')
-def instancestatus(service, environ):
-    output = header(name='InstanceStatus')
+@app.route('/status/<service>/<environ>')
+def status(service, environ):
+    output = header(name='Status')
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -106,7 +109,8 @@ def instancestatus(service, environ):
                         'stats': '/stats/%s' % i['id']
                         }
                 instances.append(i)
-    output += render_template('instancestatus.html', service=service,
+    output += servicenav(s, 'status')
+    output += render_template('status.html', service=service,
             environ=environ, instances=instances)
 
     output += footer()
@@ -142,6 +146,7 @@ def instances(service, environ):
                         }
                 instances.append(i)
 
+    output += servicenav(s, 'instances')
     output += render_template('instancelist.html', service=service,
             environ=environ, instances=instances)
 
@@ -173,6 +178,7 @@ def visual(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
+        output += servicenav(s, 'visual')
         output += render_template('visual.html', service=s.info()[service])
 
     output += footer()

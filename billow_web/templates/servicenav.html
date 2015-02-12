@@ -1,0 +1,33 @@
+{# 
+ # ServiceNav
+ #
+ #   nav {
+ #     service,
+ #     environ,
+ #     active
+ #   }
+ #}
+<div class="row">
+  <div class="container-fluid">
+    <ol class="breadcrumb">
+      <li><a href="/services">service</a></li>
+      <li><a href="/service/{{nav.service}}">{{nav.service}}</a></li>
+      <li class="active"><a href="/service/{{nav.service}}/{{nav.environ}}">{{nav.environ}}</a></li>
+    </ol>
+  </div>
+</div>
+
+<div class="row">
+  <div class="container-fluid">
+    <ul class="nav nav-pills">
+      <li role="presentation"{% if nav.active == 'service' %}class="active"{% endif %}><a href="/service/{{nav.service}}/{{nav.environ}}">Service</a></li>
+      <li role="presentation"{% if nav.active == 'status' %}class="active"{% endif %}><a href="/status/{{nav.service}}/{{nav.environ}}">Status</a></li>
+      <li role="presentation"{% if nav.active == 'instances' %}class="active"{% endif %}><a href="/instances/{{nav.service}}/{{nav.environ}}">Instances</a></li>
+      <li role="presentation"{% if nav.active == 'config' %}class="active"{% endif %}><a href="/config/{{nav.service}}/{{nav.environ}}">Config</a></li>
+      <li role="presentation"{% if nav.active == 'stats' %}class="active"{% endif %}><a href="/stats/{{nav.service}}/{{nav.environ}}">Stats</a></li>
+      <li role="presentation"{% if nav.active == 'alerts' %}class="active"{% endif %}><a href="/alerts/{{nav.service}}/{{nav.environ}}">Alerts</a></li>
+      <li role="presentation"{% if nav.active == 'visual' %}class="active"{% endif %}><a href="/visual/{{nav.service}}/{{nav.environ}}">Visual</a></li>
+    </ul>
+  </div>
+  <div class="container-fluid">&nbsp;</div>
+</div>

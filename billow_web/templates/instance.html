@@ -4,6 +4,17 @@
   <li><a href="/service/{{service}}/{{environ}}">{{environ}}</a></li>
   <li class="active"><a href="/instance/{{service}}/{{environ}}/{{instance.id}}">instance</a></li>
 </ol>
+
+<ul class="nav nav-pills">
+    <li role="presentation"><a href="/service/{{service}}/{{environ}}">Service</a></li>
+    <li role="presentation"><a href="/instancestatus/{{service}}/{{environ}}">Instance Status</a></li>
+    <li role="presentation"><a href="/instances/{{service}}/{{environ}}">Instance Details</a></li>
+    <li role="presentation"><a href="/config/{{service}}/{{environ}}">Config</a></li>
+    <li role="presentation"><a href="/stats/{{service}}/{{environ}}">Stats</a></li>
+    <li role="presentation"><a href="/alerts/{{service}}/{{environ}}">Alerts</a></li>
+    <li role="presentation"><a href="/visual/{{service}}/{{environ}}">Visual</a></li>
+</ul>
+
 <div class="panel panel-info">
   <!-- Default panel contents -->
   <div class="panel-heading">
