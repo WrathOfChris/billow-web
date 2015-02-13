@@ -5,16 +5,14 @@ import datetime
 import yaml
 from billow_web import app, config
 
-def header(name=None):
+def header():
     nav = {
             'name': 'billow-web',
-            'logourl': '/static/AWS_Simple_Icons_AWS_Cloud.svg',
-            'title': 'billow-web',
+            'logourl': config.config['logourl'],
+            'title': config.config['title'],
+            'links': config.config['links'],
             'urls': config.config['urls']
             }
-    if name:
-        nav['title'] = name
-
     output = render_template('header.html')
     output += render_template('navbar.html', nav=nav)
     return output
@@ -25,7 +23,7 @@ def footer():
 
 @app.route("/services")
 def services():
-    output = header(name='Services')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.list_services()
@@ -53,7 +51,7 @@ def servicenav(service, active):
 
 @app.route('/service/<service>')
 def service_noenv_info(service):
-    output = header(name='Service')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service(service)
@@ -66,7 +64,7 @@ def service_noenv_info(service):
 
 @app.route('/service/<service>/<environ>')
 def service_info(service, environ):
-    output = header(name='Service')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -79,7 +77,7 @@ def service_info(service, environ):
 
 @app.route('/config/<service>/<environ>')
 def service_config(service, environ):
-    output = header(name='Config')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -95,7 +93,7 @@ def service_config(service, environ):
 
 @app.route('/status/<service>/<environ>')
 def status(service, environ):
-    output = header(name='Status')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -118,7 +116,7 @@ def status(service, environ):
 
 @app.route('/instances/<service>/<environ>')
 def instances(service, environ):
-    output = header(name='Instances')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -155,13 +153,14 @@ def instances(service, environ):
 
 @app.route('/instance/<service>/<environ>/<instance>')
 def instance_service_info(service, environ, instance):
-    output = header(name='Instance')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
 
     inst = None
     for s in services:
+        output += servicenav(s, 'instance')
         inst = s.get_instance(instance)
         if inst:
             output += render_template('instance.html', instance=inst,
@@ -173,7 +172,7 @@ def instance_service_info(service, environ, instance):
 
 @app.route('/visual/<service>/<environ>')
 def visual(service, environ):
-    output = header(name='Visual')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
@@ -187,7 +186,7 @@ def visual(service, environ):
 # XXX TODO
 @app.route('/instance/<instance>')
 def instance_info(instance):
-    output = header(name='Instance')
+    output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     instances = list()
@@ -202,6 +201,26 @@ def instance_info(instance):
     output += footer()
     return output
 
+@app.route('/stats/<service>/<environ>')
+def stats_service(service, environ):
+    output = header()
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service(service)
+    for s in services:
+        output += servicenav(s, 'stats')
+    output += "NOT IMPLEMENTED (yet)"
+    return output
+
+@app.route('/alerts/<service>/<environ>')
+def alerts_service(service, environ):
+    output = header()
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service(service)
+    for s in services:
+        output += servicenav(s, 'alerts')
+    output += "NOT IMPLEMENTED (yet)"
+    return output
+
 # XXX TODO
 @app.route('/stats/<instance>')
 def stats_info(instance):
@@ -214,8 +233,8 @@ def stats_info(instance):
         return '', 404
     i = instances[0]
 
-    statsurl = 'https://yourhost.com/grafana/#/dashboard/db/instance'
-    return redirect("%s?var-instance=%s" % (statsurl, i.private_dns_name.split('.')[0]), 302)
+    statsurl = config.config['statsurl']
+    return redirect("%s%s" % (statsurl, i.private_dns_name.split('.')[0]), 302)
 
 @app.route("/")
 def root():

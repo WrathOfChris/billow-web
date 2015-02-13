@@ -87,7 +87,7 @@
           {% for group in service.groups %}
           <p class="list-group-item active">{{group.name}}
           {% for inst in group.instances %}
-          <p class="list-group-item">{{inst.id}}</p>
+          <p class="list-group-item"><a href="/instance/{{service.service}}/{{service.environ}}/{{inst.id}}">{{inst.id}}</a></p>
           {% endfor %}
           </p>
           {% endfor %}

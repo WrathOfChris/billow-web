@@ -1,49 +1,76 @@
-<ol class="breadcrumb">
-  <li><a href="/services">service</a></li>
-  <li><a href="/service/{{service}}">{{service}}</a></li>
-  <li><a href="/service/{{service}}/{{environ}}">{{environ}}</a></li>
-  <li class="active"><a href="/instance/{{service}}/{{environ}}/{{instance.id}}">instance</a></li>
-</ol>
+<div class="row">
 
-<ul class="nav nav-pills">
-    <li role="presentation"><a href="/service/{{service}}/{{environ}}">Service</a></li>
-    <li role="presentation"><a href="/instancestatus/{{service}}/{{environ}}">Instance Status</a></li>
-    <li role="presentation"><a href="/instances/{{service}}/{{environ}}">Instance Details</a></li>
-    <li role="presentation"><a href="/config/{{service}}/{{environ}}">Config</a></li>
-    <li role="presentation"><a href="/stats/{{service}}/{{environ}}">Stats</a></li>
-    <li role="presentation"><a href="/alerts/{{service}}/{{environ}}">Alerts</a></li>
-    <li role="presentation"><a href="/visual/{{service}}/{{environ}}">Visual</a></li>
-</ul>
-
-<div class="panel panel-info">
-  <!-- Default panel contents -->
-  <div class="panel-heading">
-    {{instance.id}}
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">Instance</div>
+      <table class="table">
+        <tr><td>ID</td><td>{{instance.id}}</td></tr>
+        <tr><td>Service</td><td>{{service}}</td></tr>
+        <tr><td>Environ</td><td>{{environ}}</td></tr>
+        <tr><td>Zone</td><td>{{instance.zone}}</td></tr>
+        <tr><td>Type</td><td>{{instance.instance_type}}</td></tr>
+      </table>
+    </div>
   </div>
-  <div class="panel-body"></div>
 
-  <!-- List group -->
-  <dl class="list-group dl-horizontal">
-    <dt>ID<dt><dd>{{instance.id}}</dd>
-    <dt>Host State<dt><dd>{{instance.state}}</dd>
-    <dt>Instance State<dt><dd>{{instance.instance_state}}</dd>
-    <dt>Group State<dt><dd>{{instance.health}}</dd>
-    <dt>Type<dt><dd>{{instance.instance_type}}</dd>
-    <dt>Zone<dt><dd>{{instance.zone}}</dd>
-    <dt>Public IP Address<dt><dd>{{instance.public_ip_address}}</dd>
-    <dt>Private IP Address<dt><dd>{{instance.private_ip_address}}</dd>
-    <dt>Public DNS Hostname<dt><dd>{{instance.public_dns_name}}</dd>
-    <dt>Private DNS Hostname<dt><dd>{{instance.private_dns_name}}</dd>
-    <dt>Key Name<dt><dd>{{instance.key_name}}</dd>
-    <dt>Image ID<dt><dd>{{instance.image_id}}</dd>
-    <dt>Role<dt><dd>{{instance.instance_profile}}</dd>
-    <dt>VPC<dt><dd>{{instance.vpc_id}}</dd>
-    <dt>Subnet<dt><dd>{{instance.subnet_id}}</dd>
-    <dt>Launch Config<dt><dd>{{instance.config}}</dd>
-    <dt>Launch Time<dt><dd>{{instance.launch_time}}</dd>
-    <dt>Architecture<dt><dd>{{instance.architecture}}</dd>
-    <dt>EBS Optimized<dt><dd>{{instance.ebs_optimized}}</dd>
-    <dt>Virtualization Type<dt><dd>{{instance.virtualization_type}}</dd>
-  </dl>
-  <!--<li class="list-group-item"></li>-->
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">State</div>
+      <table class="table">
+        <tr><td>Instance State</td><td>{{instance.instance_state}}</td></tr>
+        <tr><td>Group State</td><td>{{instance.health}}</td></tr>
+        <tr><td>Host State</td><td>{{instance.state}}</td></tr>
+        <tr><td>Balancer State</td><td>TBD / TODO</td></tr>
+        <tr><td>Launch Time</td><td>{{instance.launch_time}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">Cloud</div>
+      <table class="table">
+        <tr><td>Image ID</td><td>{{instance.image_id}}</td></tr>
+        <tr><td>Launch Config</td><td>{{instance.config}}</td></tr>
+        <tr><td>VPC</td><td>{{instance.vpc_id}}</td></tr>
+        <tr><td>Subnet</td><td>{{instance.subnet_id}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">Network</div>
+      <table class="table">
+        <tr><td>Public IP Address</td><td>{{instance.public_ip_address}}</td></tr>
+        <tr><td>Private IP Address</td><td>{{instance.private_ip_address}}</td></tr>
+        <tr><td>Public DNS Hostname</td><td>{{instance.public_dns_name}}</td></tr>
+        <tr><td>Private DNS Hostname</td><td>{{instance.private_dns_name}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">Security</div>
+      <table class="table">
+        <tr><td>Role</td><td>{{instance.instance_profile}}</td></tr>
+        <tr><td>Key Name</td><td>{{instance.key_name}}</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="panel panel-info">
+      <div class="panel-heading">Virtualization</div>
+      <table class="table">
+        <tr><td>Architecture</td><td>{{instance.architecture}}</td></tr>
+        <tr><td>EBS Optimized</td><td>{{instance.ebs_optimized}}</td></tr>
+        <tr><td>Virtualization</td><td>{{instance.virtualization_type}}</td></tr>
+      </table>
+    </div>
+  </div>
 </div>
