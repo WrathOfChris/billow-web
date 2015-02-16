@@ -11,8 +11,6 @@
       <div class="panel-heading">
         <h3 class="panel-title">Service</h3>
       </div>
-      <!--<div class="panel-body">
-      </div>-->
       <table class="table">
         <tr><td>Service</td><td>{{service.service}}</td></tr>
         <tr><td>Environ</td><td>{{service.environ}}</td></tr>
@@ -27,13 +25,11 @@
       <div class="panel-heading">
         <h3 class="panel-title">Groups</h3>
       </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for group in service.groups %}
-          <li class="list-group-item">{{group.name}}</li>
-          {% endfor %}
-        </ul>
-      </div>
+      <table class="table">
+        {% for group in service.groups %}
+        <tr><td>{{group.name}}</td></tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
 
@@ -42,13 +38,11 @@
       <div class="panel-heading">
         <h3 class="panel-title">Balancers</h3>
       </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for name, elb in service['load_balancers'].iteritems() %}
-          <li class="list-group-item">{{name}}</li>
-          {% endfor %}
-        </ul>
-      </div>
+      <table class="table">
+        {% for name, elb in service['load_balancers'].iteritems() %}
+        <tr><td>{{name}}</td></tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
 
@@ -102,15 +96,13 @@
       <div class="panel-heading">
         <h3 class="panel-title">Balancers</h3>
       </div>
-      <div class="panel-body">
-        <table class="table table-condensed">
-          {% for name, elb in service['load_balancers'].iteritems() %}
-          <tr>
-            <td>{{name}}</td>
-          </tr>
-          {% endfor %}
-        </table>
-      </div>
+      <table class="table table-condensed">
+        {% for name, elb in service['load_balancers'].iteritems() %}
+        <tr>
+          <td>{{name}}</td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
 </row>
