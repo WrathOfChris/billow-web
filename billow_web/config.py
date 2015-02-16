@@ -21,7 +21,8 @@ config = {
         'links': [],
         'urls': [
             { 'name': 'us-east-1', 'url': '/#' },
-            ]
+            ],
+        'dns': []
         }
 
 # Load config from file

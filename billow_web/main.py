@@ -170,15 +170,68 @@ def instance_service_info(service, environ, instance):
     output += footer()
     return output
 
+def get_all_endpoints(service):
+    """
+    Recursively search all zones for ELB references
+    """
+    endpoints = list()
+
+    endpoint = billow.billowEndpoint([], service.region)
+    for zone in config.config['dns']:
+        if 'role' in zone:
+            endpoint.set_role(zone['zone'], zone['role'])
+        else:
+            endpoint.add_zone(zone['zone'])
+
+    # find ELB destinations
+    sinfo = service.info()[service.service]
+    for b in sinfo['load_balancers'].values():
+        e = endpoint.find_destination(b['dns_name'])
+        if e:
+            endpoints = list(set(endpoints + e))
+
+    lastlen = 0
+    while lastlen != len(endpoints):
+        lastlen = len(endpoints)
+        for name in endpoints:
+            e = endpoint.find_destination(name)
+            if e:
+                endpoints = list(set(endpoints + e))
+
+    return endpoints
+
 @app.route('/visual/<service>/<environ>')
 def visual(service, environ):
     output = header()
 
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
+
     for s in services:
+        sinfo = s.info()[service]
+        endpoints = get_all_endpoints(s)
+
         output += servicenav(s, 'visual')
-        output += render_template('visual.html', service=s.info()[service])
+        output += render_template('visual.html', service=sinfo,
+                endpoints=endpoints)
+
+    output += footer()
+    return output
+
+@app.route('/endpoint/<service>/<environ>')
+def endpoint(service, environ):
+    output = header()
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service("%s-%s" % (service, environ))
+
+    for s in services:
+        sinfo = s.info()[service]
+        endpoints = get_all_endpoints(s)
+
+        output += servicenav(s, 'endpoint')
+        output += render_template('endpoint.html', service=sinfo,
+                endpoints=endpoints)
 
     output += footer()
     return output

@@ -27,7 +27,11 @@
       </div>
       <div class="media-body">
         <h4 class="media-heading">Service Endpoint</h4>
-        ...TBD...
+        <div class="list-group">
+          {% for ename in endpoints %}
+          <p class="list-group-item">{{ename}}</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
