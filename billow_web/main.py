@@ -196,7 +196,8 @@ def get_all_endpoints(service):
         for name in endpoints:
             e = endpoint.find_destination(name)
             if e:
-                endpoints = list(set(endpoints + e))
+                endpoints.extend(e)
+        endpoints = list(set(endpoints + e))
 
     return endpoints
 
