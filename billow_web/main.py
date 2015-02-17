@@ -281,8 +281,9 @@ def stats_info(instance):
     bc = billow.billowCloud(regions=config.config['regions'])
     instances = list()
     for r in bc.regions:
-        if r.region == 'us-east-1':
-            instances = r.asg.get_instance(instance)
+        instances = r.asg.get_instance(instance)
+        if instances:
+            break
     if not instances:
         return '', 404
     i = instances[0]
