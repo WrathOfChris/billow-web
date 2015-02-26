@@ -22,14 +22,14 @@
       {% for instance in instances %}
       <tr>
         <td>{{instance.id}}</td>
-        <td>{{instance.health}}</td>
-        <td>{{instance.state}}</td>
+        <td>{{instance.group_health}}</td>
+        <td>{{instance.group_state}}</td>
         <td>{{instance.zone}}</td>
-        <td>{{instance.config}}</td>
+        <td>{{instance.group_config}}</td>
         <td>
           <div class="btn-group" role="group" aria-label="commands">
-            <button type="button" class="btn btn-default btn-xs"><a href="{{instance.url.instance}}">Details</a></button>
-            <button type="button" class="btn btn-default btn-xs"><a href="{{instance.url.stats}}">Stats</a></button>
+            <button type="button" class="btn btn-default btn-xs"><a href="{{urls[instance.id].instance}}">Details</a></button>
+            <button type="button" class="btn btn-default btn-xs"><a href="{{urls[instance.id].stats}}">Stats</a></button>
           </div>
         </td>
       </tr>

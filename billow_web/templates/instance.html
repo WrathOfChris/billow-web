@@ -18,9 +18,9 @@
       <div class="panel-heading">State</div>
       <table class="table">
         <tr><td>Instance State</td><td>{{instance.instance_state}}</td></tr>
-        <tr><td>Group State</td><td>{{instance.health}}</td></tr>
-        <tr><td>Host State</td><td>{{instance.state}}</td></tr>
-        <tr><td>Balancer State</td><td>TBD / TODO</td></tr>
+        <tr><td>Group State</td><td>{{instance.group_health}}</td></tr>
+        <tr><td>Host State</td><td>{{instance.group_state}}</td></tr>
+        <tr><td>Balancer State</td><td>{{instance.balancer_state}}</td></tr>
         <tr><td>Launch Time</td><td>{{instance.launch_time}}</td></tr>
       </table>
     </div>
@@ -31,7 +31,7 @@
       <div class="panel-heading">Cloud</div>
       <table class="table">
         <tr><td>Image ID</td><td>{{instance.image_id}}</td></tr>
-        <tr><td>Launch Config</td><td>{{instance.config}}</td></tr>
+        <tr><td>Launch Config</td><td>{{instance.group_config}}</td></tr>
         <tr><td>VPC</td><td>{{instance.vpc_id}}</td></tr>
         <tr><td>Subnet</td><td>{{instance.subnet_id}}</td></tr>
       </table>

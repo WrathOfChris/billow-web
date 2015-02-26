@@ -10,8 +10,8 @@
       <div class="media-body">
         <h4 class="media-heading">Load Balancer DNS</h4>
         <div class="list-group">
-          {% for ename in service.load_balancers %}
-          <p class="list-group-item">{{service.load_balancers[ename].dns_name}}</p>
+          {% for ename in service.balancers %}
+          <p class="list-group-item">{{service.balancers[ename].dns_name}}</p>
           {% endfor %}
         </div>
       </div>
@@ -48,7 +48,7 @@
       <div class="media-body">
         <h4 class="media-heading">Load Balancer</h4>
         <div class="list-group">
-          {% for name, elb in service['load_balancers'].iteritems() %}
+          {% for name, elb in service['balancers'].iteritems() %}
           <p class="list-group-item">{{name}}</p>
           {% endfor %}
         </div>

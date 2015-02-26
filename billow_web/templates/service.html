@@ -39,7 +39,7 @@
         <h3 class="panel-title">Balancers</h3>
       </div>
       <table class="table">
-        {% for name, elb in service['load_balancers'].iteritems() %}
+        {% for name, elb in service['balancers'].iteritems() %}
         <tr><td>{{name}}</td></tr>
         {% endfor %}
       </table>
@@ -97,7 +97,7 @@
         <h3 class="panel-title">Balancers</h3>
       </div>
       <table class="table table-condensed">
-        {% for name, elb in service['load_balancers'].iteritems() %}
+        {% for name, elb in service['balancers'].iteritems() %}
         <tr>
           <td>{{name}}</td>
         </tr>

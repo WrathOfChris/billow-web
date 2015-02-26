@@ -57,7 +57,7 @@ def service_noenv_info(service):
     services = bc.get_service(service)
     for s in services:
         output += servicenav(s, 'service')
-        output += render_template('service.html', service=s.config()[service])
+        output += render_template('service.html', service=s.config())
 
     output += footer()
     return output
@@ -70,7 +70,7 @@ def service_info(service, environ):
     services = bc.get_service("%s-%s" % (service, environ))
     for s in services:
         output += servicenav(s, 'service')
-        output += render_template('service.html', service=s.config()[service])
+        output += render_template('service.html', service=s.config())
 
     output += footer()
     return output
@@ -98,10 +98,11 @@ def status(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     instances = list()
+    urls = dict()
     for s in services:
         for g in s.groups:
             for i in g.instancestatus:
-                i['url'] = {
+                urls[i.id] = {
                         'instance': '/instance/%s/%s/%s' % (service, environ,
                             i['id']),
                         'stats': '/stats/%s' % i['id']
@@ -109,7 +110,7 @@ def status(service, environ):
                 instances.append(i)
     output += servicenav(s, 'status')
     output += render_template('status.html', service=service,
-            environ=environ, instances=instances)
+            environ=environ, instances=instances, urls=urls)
 
     output += footer()
     return output
@@ -121,32 +122,33 @@ def instances(service, environ):
     bc = billow.billowCloud(regions=config.config['regions'])
     services = bc.get_service("%s-%s" % (service, environ))
     instances = list()
+    info = dict()
     for s in services:
         for g in s.groups:
             for i in g.instances:
                 if i['public_ip_address']:
-                    i['ip_address'] = i['public_ip_address']
+                    info[i.id] = { 'ip_address': i['public_ip_address'] }
                 else:
-                    i['ip_address'] = i['private_ip_address']
+                    info[i.id] = { 'ip_address': i['private_ip_address'] }
                 if i['public_dns_name']:
-                    i['dns_name'] = i['public_dns_name']
+                    info[i.id]['dns_name'] = i['public_dns_name']
                 else:
-                    i['dns_name'] = i['private_dns_name']
+                    info[i.id]['dns_name'] = i['private_dns_name']
                 launch = datetime.datetime.strptime(i['launch_time'],
                         "%Y-%m-%dT%H:%M:%S.%fZ")
                 uptime = datetime.datetime.utcnow() - launch
-                i['uptime'] = str(uptime - datetime.timedelta(
+                info[i.id]['uptime'] = str(uptime - datetime.timedelta(
                     microseconds=uptime.microseconds))
-                i['url'] = {
+                info[i.id]['url'] = {
                         'instance': '/instance/%s/%s/%s' % (service, environ,
                             i['id']),
-                        'stats': '/stats/%s' % i['id']
+                        'stats': '/stats/%s' % i.id
                         }
                 instances.append(i)
 
     output += servicenav(s, 'instances')
     output += render_template('instancelist.html', service=service,
-            environ=environ, instances=instances)
+            environ=environ, instances=instances, info=info)
 
     output += footer()
     return output
@@ -184,8 +186,8 @@ def get_all_endpoints(service):
             endpoint.add_zone(zone['zone'])
 
     # find ELB destinations
-    sinfo = service.info()[service.service]
-    for b in sinfo['load_balancers'].values():
+    sinfo = service.info()
+    for b in sinfo['balancers'].values():
         e = endpoint.find_destination(b['dns_name'])
         if e:
             endpoints = list(set(endpoints + e))
@@ -209,7 +211,7 @@ def visual(service, environ):
     services = bc.get_service("%s-%s" % (service, environ))
 
     for s in services:
-        sinfo = s.info()[service]
+        sinfo = s.info()
         endpoints = get_all_endpoints(s)
 
         output += servicenav(s, 'visual')
@@ -227,7 +229,7 @@ def endpoint(service, environ):
     services = bc.get_service("%s-%s" % (service, environ))
 
     for s in services:
-        sinfo = s.info()[service]
+        sinfo = s.info()
         endpoints = get_all_endpoints(s)
 
         output += servicenav(s, 'endpoint')
