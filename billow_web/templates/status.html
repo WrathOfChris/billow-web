@@ -5,14 +5,25 @@
     } );
 </script>
 
+{% for instance in instances %}
+    {% for event in instance.status_events %}
+    <div class="alert alert-warning" role="alert">
+        {{instance.id}} {{event.code}}: {{event.description}}
+        [ {{event.not_before}} - {{event.not_after}} ]
+    </div>
+    {% endfor %}
+{% endfor %}
+
 <div class="list-group">
   <a href="#" class="list-group-item active">Instances</a>
-  <table id="instancelist" class="table table-striped table-bordered" cellspacing="0" width="100%">
+  <table id="instancelist" class="table table-striped table-bordered table-compressed" cellspacing="0" width="100%">
     <thead>
       <tr>
         <td>ID</td>
-        <td>Health</td>
-        <td>State</td>
+        <td>Group Health</td>
+        <td>Group State</td>
+        <td>Hardware Status</td>
+        <td>Instance Status</td>
         <td>Zone</td>
         <td>Config</td>
         <td>Commands</td>
@@ -24,6 +35,8 @@
         <td>{{instance.id}}</td>
         <td>{{instance.group_health}}</td>
         <td>{{instance.group_state}}</td>
+        <td>{{instance.hardware_status}}</td>
+        <td>{{instance.instance_status}}</td>
         <td>{{instance.zone}}</td>
         <td>{{instance.group_config}}</td>
         <td>

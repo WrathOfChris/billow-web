@@ -11,9 +11,10 @@
     <thead>
       <tr>
         <td>ID</td>
-        <td>HostState</td>
-        <td>InstState</td>
-        <td>Health</td>
+        <td>Group State</td>
+        <td>Group Health</td>
+        <td>Instance State</td>
+        <td>Balancer State</td>
         <td>IP Address</td>
         <td>Hostname</td>
         <td>Zone</td>
@@ -28,8 +29,9 @@
       <tr>
         <td>{{instance.id}}</td>
         <td>{{instance.group_state}}</td>
-        <td>{{instance.instance_state}}</td>
         <td>{{instance.group_health}}</td>
+        <td>{{instance.instance_state}}</td>
+        <td>{{instance.balancer_state}}</td>
         <td>{{info[instance.id].ip_address}}</td>
         <td>{{info[instance.id].dns_name}}</td>
         <td>{{instance.zone}}</td>

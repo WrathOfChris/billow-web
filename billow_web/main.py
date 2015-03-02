@@ -101,7 +101,7 @@ def status(service, environ):
     urls = dict()
     for s in services:
         for g in s.groups:
-            for i in g.instancestatus:
+            for i in g.status:
                 urls[i.id] = {
                         'instance': '/instance/%s/%s/%s' % (service, environ,
                             i['id']),
@@ -247,12 +247,11 @@ def instance_info(instance):
     bc = billow.billowCloud(regions=config.config['regions'])
     instances = list()
     for r in bc.regions:
-        if r.region == 'us-east-1':
-            instances = r.asg.get_instance(instance)
-    raw = ''
-    for i in instances:
-        raw += pformat(vars(i))
-    output += render_template('instance.html', raw=raw)
+        instances = r.asg.get_instance(instance)
+        for i in instances:
+            inst = billow.billowInstance(i.id, region=r.region)
+            inst.push_instance_info(i)
+            output += render_template('instance.html', instance=inst)
 
     output += footer()
     return output
@@ -292,6 +291,23 @@ def stats_info(instance):
 
     statsurl = config.config['statsurl']
     return redirect("%s%s" % (statsurl, i.private_dns_name.split('.')[0]), 302)
+
+@app.route('/events')
+def events_all():
+    output = header()
+    statuslist = list()
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    for r in bc.regions:
+        rawstatus = r.asg.get_instance_status(
+                list(),
+                filters = { 'event.code': '*' }
+                )
+        statuslist.extend(rawstatus)
+
+    output += render_template('eventlist.html', status=statuslist)
+    output += footer()
+    return output
 
 @app.route("/")
 def root():
