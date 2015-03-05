@@ -309,6 +309,22 @@ def events_all():
     output += footer()
     return output
 
+@app.route('/events/<service>/<environ>')
+def events(service, environ):
+    output = header()
+
+    bc = billow.billowCloud(regions=config.config['regions'])
+    services = bc.get_service("%s-%s" % (service, environ))
+    instances = list()
+    urls = dict()
+    for s in services:
+        for g in s.groups:
+            output += render_template('event.html', group=g.group,
+                    events=g.events)
+
+    output += footer()
+    return output
+
 @app.route("/")
 def root():
     return services()
