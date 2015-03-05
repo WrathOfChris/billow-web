@@ -318,6 +318,7 @@ def events(service, environ):
     instances = list()
     urls = dict()
     for s in services:
+        output += servicenav(s, 'events')
         for g in s.groups:
             output += render_template('event.html', group=g.group,
                     events=g.events)

@@ -24,6 +24,7 @@
       <li role="presentation"{% if nav.active == 'instances' %}class="active"{% endif %}><a href="/instances/{{nav.service}}/{{nav.environ}}">Instances</a></li>
       <li role="presentation"{% if nav.active == 'status' %}class="active"{% endif %}><a href="/status/{{nav.service}}/{{nav.environ}}">Status</a></li>
       <li role="presentation"{% if nav.active == 'config' %}class="active"{% endif %}><a href="/config/{{nav.service}}/{{nav.environ}}">Config</a></li>
+      <li role="presentation"{% if nav.active == 'events' %}class="active"{% endif %}><a href="/events/{{nav.service}}/{{nav.environ}}">Events</a></li>
       <li role="presentation"{% if nav.active == 'stats' %}class="active"{% endif %}><a href="/stats/{{nav.service}}/{{nav.environ}}">Stats</a></li>
       <li role="presentation"{% if nav.active == 'alerts' %}class="active"{% endif %}><a href="/alerts/{{nav.service}}/{{nav.environ}}">Alerts</a></li>
       <li role="presentation"{% if nav.active == 'visual' %}class="active"{% endif %}><a href="/visual/{{nav.service}}/{{nav.environ}}">Visual</a></li>
