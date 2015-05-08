@@ -126,10 +126,13 @@ def instances(service, environ):
     for s in services:
         for g in s.groups:
             for i in g.instances:
+                info[i.id] = {}
                 if i['public_ip_address']:
-                    info[i.id] = { 'ip_address': i['public_ip_address'] }
+                    info[i.id]['ip_address'] = i['public_ip_address']
                 else:
-                    info[i.id] = { 'ip_address': i['private_ip_address'] }
+                    info[i.id]['ip_address'] = i['private_ip_address']
+                info[i.id]['public_ip_address'] = i['public_ip_address']
+                info[i.id]['private_ip_address'] = i['private_ip_address']
                 if i['public_dns_name']:
                     info[i.id]['dns_name'] = i['public_dns_name']
                 else:

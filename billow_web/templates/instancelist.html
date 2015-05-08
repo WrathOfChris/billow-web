@@ -15,8 +15,8 @@
         <td>Group Health</td>
         <td>Instance State</td>
         <td>Balancer State</td>
-        <td>IP Address</td>
-        <td>Hostname</td>
+        <td>Private IP Address</td>
+        <td>Public IP Address</td>
         <td>Zone</td>
         <td>Type</td>
         <td>Config</td>
@@ -32,8 +32,8 @@
         <td>{{instance.group_health}}</td>
         <td>{{instance.instance_state}}</td>
         <td>{{instance.balancer_state}}</td>
-        <td>{{info[instance.id].ip_address}}</td>
-        <td>{{info[instance.id].dns_name}}</td>
+        <td>{{info[instance.id].private_ip_address}}</td>
+        <td>{{info[instance.id].public_ip_address}}</td>
         <td>{{instance.zone}}</td>
         <td>{{instance.instance_type}}</td>
         <td>{{instance.group_config}}</td>
