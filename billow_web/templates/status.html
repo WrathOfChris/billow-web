@@ -24,6 +24,7 @@
         <td>Group State</td>
         <td>Hardware Status</td>
         <td>Instance Status</td>
+        <td>Balancer Status</td>
         <td>Zone</td>
         <td>Config</td>
         <td>Commands</td>
@@ -37,6 +38,7 @@
         <td>{{instance.group_state}}</td>
         <td>{{instance.hardware_status}}</td>
         <td>{{instance.instance_status}}</td>
+        <td>{{balancers[instance.id]|join(', ')}}</td>
         <td>{{instance.zone}}</td>
         <td>{{instance.group_config}}</td>
         <td>

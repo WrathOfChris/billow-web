@@ -99,18 +99,27 @@ def status(service, environ):
     services = bc.get_service("%s-%s" % (service, environ))
     instances = list()
     urls = dict()
+    balancers = dict()
     for s in services:
         for g in s.groups:
-            for i in g.status:
+            # XXX pull in status for instance events
+            status = g.status
+            for i in g.instances:
                 urls[i.id] = {
                         'instance': '/instance/%s/%s/%s' % (service, environ,
                             i['id']),
                         'stats': '/stats/%s' % i['id']
                         }
                 instances.append(i)
+        for b in s.balancers:
+            for i in b.instances:
+                if i.id not in balancers:
+                    balancers[i.id] = list()
+                balancers[i.id].append(i.balancer_state)
     output += servicenav(s, 'status')
     output += render_template('status.html', service=service,
-            environ=environ, instances=instances, urls=urls)
+            environ=environ, instances=instances, balancers=balancers,
+            urls=urls)
 
     output += footer()
     return output
