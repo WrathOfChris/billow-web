@@ -302,7 +302,7 @@ def stats_info(instance):
     i = instances[0]
 
     statsurl = config.config['statsurl']
-    return redirect("%s%s" % (statsurl, i.private_dns_name.split('.')[0]), 302)
+    return redirect("%s%s" % (statsurl, str(i.id), 302)
 
 @app.route('/events')
 def events_all():
